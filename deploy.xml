@@ -1,0 +1,35 @@
+<project name="MDP-LatLon2Geo" default="deploy" basedir=".">
+	<description>MDP-LatLon2Geo</description>
+	
+	<!-- Directory layout -->
+	<property name="library-name" value="mdp-ll2g.jar" />
+	<property name="src-dir" location="src" />
+	<property name="obj-dir" location="obj" />
+	<property name="lib-dir" location="lib" />
+	<property name="deploy-dir" location="deploy" />
+	
+	<target name="init" description="Initial setup">
+		<mkdir dir="${obj-dir}" />
+		<mkdir dir="${deploy-dir}" />
+	</target>
+	
+	<target name="copy-deps" description="Copy third party dependencies">
+		<copy todir="${deploy-dir}" flatten="true">
+			<fileset dir="${lib-dir}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="deploy" depends="init, copy-deps">
+		<javac srcdir="${src-dir}" destdir="${obj-dir}" target="1.7">
+			<classpath>
+				<fileset dir="${lib-dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		<jar destfile="${deploy-dir}/${library-name}" basedir="${obj-dir}" includes="**/*.class" />
+		<delete dir="${obj-dir}" />
+	</target>
+</project>
